@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:mcp="http://www.mulesoft.org/schema/mule/mcp"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+        http://www.mulesoft.org/schema/mule/core     http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http     http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/mcp      http://www.mulesoft.org/schema/mule/mcp/current/mule-mcp.xsd">
+
+	<http:listener-config name="Listener-config">
+		<http:listener-connection host="0.0.0.0"
+			port="8081" />
+	</http:listener-config>
+
+	<mcp:server-config name="Server"
+		serverName="colombia-mcp-server" serverVersion="1.0.0">
+		<mcp:streamable-http-server-connection
+			listenerConfig="Listener-config" />
+	</mcp:server-config>
+
+	<http:request-config name="Request-config"
+		basePath="/api/v1/Airport">
+		<http:request-connection
+			host="api-colombia.com" port="443" protocol="HTTPS" />
+	</http:request-config>
+
+	<flow name="get-airport-by-id-flow">
+		<mcp:tool-listener config-ref="Server"
+			doc:name="Tool-listener" name="get-airport-by-id">
+			<mcp:description><![CDATA[Fetch details for a specific Colombian airport using its unique numeric identifier.]]></mcp:description>
+			<mcp:parameters-schema><![CDATA[{
+                "$schema": "http://json-schema.org/draft-07/schema",
+                "type": "object",
+                "properties": {
+                    "airportid": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "The unique numeric ID of the Colombian airport to fetch (e.g., 1)."
+                    }
+                },
+                "required": ["airportid"]
+            }]]></mcp:parameters-schema>
+			<mcp:responses>
+				<mcp:text-tool-response-content
+					text="#[payload.^raw]" />
+			</mcp:responses>
+		</mcp:tool-listener>
+
+		<set-variable variableName="airportId"
+			value="#[payload.arguments.airportid]" doc:name="Store Airport ID" />
+
+		<http:request config-ref="Request-config"
+			doc:id="2f3b8125-9927-45ae-b684-6fb2cd98bd20"
+			doc:name="Execute Get Airport API" method="GET"
+			path="/#[vars.airportId]" />
+	</flow>
+
+</mule>
