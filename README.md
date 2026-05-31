@@ -1,6 +1,6 @@
 # MuleSoft Airport MCP Server
 
-This Mule 4 application implements a Model Context Protocol (MCP) server that exposes a dedicated tool for Large Language Models (LLMs) and AI agents. It serves as an integration bridge between an MCP client (such as Claude Desktop) and the public `api-colombia.com` REST API to fetch operational data about Colombian airports.
+This Mule 4 application implements a Model Context Protocol (MCP) server that exposes a dedicated tool for Large Language Models (LLMs) and AI agents. It serves as an integration bridge between an MCP client (such as Claude Desktop) and the public `api-colombia.com` REST API to fetch operational data about  airports.
 
 ## 📋 Features
 
@@ -40,7 +40,7 @@ sequenceDiagram
 
 ### `get-airport-by-id`
 
-Fetches technical and operational details for a specific Colombian airport using its unique numeric identifier.
+Fetches technical and operational details for a specific  airport using its unique numeric identifier.
 
 **Input Parameter Schema:**
 ```json
@@ -51,7 +51,7 @@ Fetches technical and operational details for a specific Colombian airport using
     "airportid": {
       "type": "integer",
       "minimum": 1,
-      "description": "The unique numeric ID of the Colombian airport to fetch (e.g., 1)."
+      "description": "The unique numeric ID of the  airport to fetch (e.g., 1)."
     }
   },
   "required": ["airportid"]
