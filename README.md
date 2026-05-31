@@ -1,12 +1,17 @@
-## MuleSoft MCP Server
-This Mule 4 application implements a Model Context Protocol (MCP) server that exposes a dedicated tool for Large Language Models (LLMs) and AI agents. It serves as an integration bridge between an MCP client (such as Claude Desktop) and the public api-colombia.com REST API to fetch operational data about Colombian airports.
+# Colombia Airport MCP Server
 
-## Features
-MCP Server Integration: Spins up an MCP server instance (colombia-mcp-server v1.0.0) over an HTTP connection.AI Tool Orchestration: Exposes the get-airport-by-id tool to LLMs using a predefined JSON validation schema.Target Integration: Proxies requests securely to the external Colombia API via HTTPS.
+This Mule 4 application implements a Model Context Protocol (MCP) server that exposes a dedicated tool for Large Language Models (LLMs) and AI agents. It serves as an integration bridge between an MCP client (such as Claude Desktop) and the public `api-colombia.com` REST API to fetch operational data about Colombian airports.
 
-## Execution Flow Chart
+## 📋 Features
 
-The diagram below outlines the message tracking lifecycle when an AI agent requests airport information through this application
+* **MCP Server Integration**: Spins up an MCP server instance (`colombia-mcp-server` v1.0.0) over an HTTP connection.
+* **AI Tool Orchestration**: Exposes the `get-airport-by-id` tool to LLMs using a predefined JSON validation schema.
+* **Target Integration**: Proxies requests securely to the external Colombia API via HTTPS.
+
+## 🗺️ Execution Flow Chart
+
+The diagram below outlines the message tracking lifecycle when an AI agent requests airport information through this application:
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -25,16 +30,22 @@ sequenceDiagram
     MuleMCP-->>LLM: Return Raw Text Tool Content (mcp:text-tool-response-content)
 ```
 
-## Prerequisites
-Mule Runtime: Version 4.x
-Anypoint Studio: Version 7.x or higher
-MCP Client: An MCP-enabled environment (e.g., Claude Desktop, Cursor, or an application built with an MCP SDK)
+## 🛠️ Prerequisites
 
-## Exposed Tools
-get-airport-by-idFetches technical and operational details for a specific Colombian airport using its unique numeric identifier.
+* **Mule Runtime**: Version 4.x
+* **Anypoint Studio**: Version 7.x or higher
+* **MCP Client**: An MCP-enabled environment (e.g., Claude Desktop, Cursor, or an application built with an MCP SDK)
 
-Input Parameter Schema:json{
-  "$schema": "http://json-schema.org",
+## 🔧 Exposed Tools
+
+### `get-airport-by-id`
+
+Fetches technical and operational details for a specific Colombian airport using its unique numeric identifier.
+
+**Input Parameter Schema:**
+```json
+{
+  "\$schema": "http://json-schema.org",
   "type": "object",
   "properties": {
     "airportid": {
@@ -45,9 +56,20 @@ Input Parameter Schema:json{
   },
   "required": ["airportid"]
 }
-## Deployment & Configuration
-1. Run the ApplicationDeploy this project to your local Mule runtime or launch it via Anypoint Studio. By default, the HTTP listener binds to:Host: 0.0.0.0Port: 8081
-2. Connect Your MCP ClientAdd this server to your local client configuration file (e.g., claude_desktop_config.json). Depending on how your Mule MCP plugin exposes its endpoint over HTTP, point your Server-Sent Events (SSE) or HTTP Bridge configuration to your local listener:json{
+```
+
+## 🚀 Deployment & Configuration
+
+### 1. Run the Application
+Deploy this project to your local Mule runtime or launch it via Anypoint Studio. By default, the HTTP listener binds to:
+* **Host**: `0.0.0.0`
+* **Port**: `8081`
+
+### 2. Connect Your MCP Client
+Add this server to your local client configuration file (e.g., `claude_desktop_config.json`). Depending on how your Mule MCP plugin exposes its endpoint over HTTP, point your Server-Sent Events (SSE) or HTTP Bridge configuration to your local listener:
+
+```json
+{
   "mcpServers": {
     "colombia-airport-mcp": {
       "command": "mcp-http-bridge-client",
@@ -55,5 +77,9 @@ Input Parameter Schema:json{
     }
   }
 }
-## Error & Exception Handling
-Schema Failures: If an LLM passes a non-integer or negative value, the MCP validation block automatically reports an execution failure back to the host client.Upstream Service Errors: Connectivity disruptions or broken paths targeting api-colombia.com are caught by the HTTP request component and passed back inside the tool's textual content container.
+```
+
+## 🛡️ Error & Exception Handling
+
+* **Schema Failures**: If an LLM passes a non-integer or negative value, the MCP validation block automatically reports an execution failure back to the host client.
+* **Upstream Service Errors**: Connectivity disruptions or broken paths targeting `api-colombia.com` are caught by the HTTP request component and passed back inside the tool's textual content container.
