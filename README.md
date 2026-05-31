@@ -78,6 +78,9 @@ Add this server to your local client configuration file (e.g., `claude_desktop_c
   }
 }
 ```
+## Postman
+<img width="2654" height="1802" alt="image" src="https://github.com/user-attachments/assets/695d9755-de87-4ac7-84ea-77a9b2d95fc4" />
+
 
 ## 🛡️ Error & Exception Handling
 
